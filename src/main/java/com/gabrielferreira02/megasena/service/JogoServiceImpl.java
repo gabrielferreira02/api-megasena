@@ -18,8 +18,8 @@ import java.util.*;
 public class JogoServiceImpl implements JogoService{
 
     private final JogoRepository jogoRepository;
+    private final GerarNumeros gerarNumeros;
     private static final double premioTotal = 320000000.0;
-    private static final Random random = new Random();
 
     @Override
     public JogoResponse registrar(JogoRequest request) {
@@ -60,7 +60,7 @@ public class JogoServiceImpl implements JogoService{
     @Override
     public ResultadoResponse jogar() {
         List<Jogo> jogos = jogoRepository.findAll();
-        List<Integer> numerosSorteados = sortearNumeros();
+        List<Integer> numerosSorteados = gerarNumeros.gerarNumeros();
         List<Vencedores> vencedores6Numeros = new ArrayList<>();
         List<Vencedores> vencedores5Numeros = new ArrayList<>();
         List<Vencedores> vencedores4Numeros = new ArrayList<>();
@@ -96,17 +96,6 @@ public class JogoServiceImpl implements JogoService{
                 vencedoresSena,
                 vencedoresQuina,
                 vencedoresQuadra);
-    }
-
-    private static List<Integer> sortearNumeros() {
-        List<Integer> numeros = new ArrayList<>();
-
-        while(numeros.size() < 6) {
-            int numero = random.nextInt(60) + 1;
-            if(!numeros.contains(numero)) numeros.add(numero);
-        }
-
-        return numeros;
     }
 
     private static int calcularAcertos(List<Integer> numerosJogados, List<Integer> numerosSorteados) {
